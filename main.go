@@ -79,10 +79,16 @@ func GetFingerprintLines(client *ec2.EC2, instance *ec2.Instance) [][]byte {
 
 	lines := bytes.SplitAfter(out, []byte("\n"))
 
+	seen := map[string]struct{}{}
+
 	var fingerprintLines [][]byte
 	for _, line := range lines {
+		if _, ok := seen[string(line)]; ok {
+			continue
+		}
 		if FingerprintRE.Match(line) {
 			fingerprintLines = append(fingerprintLines, line)
+			seen[string(line)] = struct{}{}
 		}
 	}
 	return fingerprintLines
@@ -117,6 +123,7 @@ func main() {
 						log.Fatal(err)
 					}
 				}
+				fmt.Fprintln(os.Stdout)
 			}
 		}
 	}
