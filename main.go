@@ -7,6 +7,7 @@ import (
 	"strings"
 	// "fmt"
 	"log"
+	"sort"
 	// "net"
 	"os"
 	"regexp"
@@ -55,6 +56,7 @@ func PrettyTags(in []*ec2.Tag) string {
 		}
 		result = append(result, fmt.Sprint(*t.Key, "=", *t.Value))
 	}
+	sort.Strings(result)
 	return strings.Join(result, " ")
 }
 
